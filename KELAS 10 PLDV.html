@@ -1,0 +1,1777 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pembelajaran Sistem Persamaan Linear</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      .print-section { 
+        page-break-after: always;
+        padding: 20px;
+        background: white !important;
+      }
+      .print-section:last-child { page-break-after: auto; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+    
+    .activity-card {
+      background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%);
+      border-radius: 20px;
+      padding: 3px;
+    }
+    
+    .activity-inner {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+    }
+    
+    .tab-active {
+      background: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%);
+      color: white;
+    }
+    
+    .canvas-container {
+      border: 3px solid #e5e7eb;
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .progress-bar {
+      background: linear-gradient(90deg, #0ea5e9, #3b82f6, #6366f1, #8b5cf6);
+      background-size: 200% 100%;
+      animation: gradient-shift 2s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .floating-emoji {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    input[type="text"], input[type="number"], select, textarea {
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .correct-answer {
+      background-color: #d1fae5;
+      border-color: #10b981;
+    }
+    
+    .wrong-answer {
+      background-color: #fee2e2;
+      border-color: #ef4444;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .method-box {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .method-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .math-display {
+      font-size: 1.1em;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 4px solid #3b82f6;
+      margin: 8px 0;
+    }
+    
+    canvas {
+      border-radius: 12px;
+    }
+    
+    .page-break-before {
+      page-break-before: always;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50">
+  <div id="app" class="h-full overflow-auto"><!-- Header -->
+   <header class="no-print bg-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+     <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-3"><span class="text-4xl floating-emoji">📊</span>
+       <div>
+        <h1 id="main-title" class="text-2xl font-extrabold bg-gradient-to-r from-sky-600 to-indigo-600 bg-clip-text text-transparent">Sistem Persamaan Linear</h1>
+        <p class="text-sm text-gray-500">Metode Grafik, Substitusi &amp; Eliminasi</p>
+       </div>
+      </div>
+      <div class="flex items-center gap-2"><label id="student-name-label" class="text-sm font-semibold text-gray-600">Nama Siswa:</label> <input type="text" id="student-name" placeholder="Masukkan nama" class="w-40">
+      </div>
+     </div><!-- Progress Bar -->
+     <div class="mt-4">
+      <div class="flex justify-between text-xs text-gray-500 mb-1"><span>Progress Belajar</span> <span id="progress-text">0%</span>
+      </div>
+      <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+       <div id="progress-bar" class="h-full progress-bar rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+     </div>
+    </div>
+   </header><!-- Navigation Tabs -->
+   <nav class="no-print max-w-7xl mx-auto px-4 py-4">
+    <div class="flex flex-wrap gap-2 bg-white rounded-2xl p-2 shadow-lg"><button onclick="showSection('materi')" class="tab-btn tab-active px-4 py-2 rounded-xl font-semibold text-sm transition-all">📚 Materi</button> <button onclick="showSection('metode-grafik')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">📈 Metode Grafik</button> <button onclick="showSection('aktivitas-grafik')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">📝 Aktivitas 1</button> <button onclick="showSection('metode-substitusi')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">🔄 Metode Substitusi</button> <button onclick="showSection('aktivitas-substitusi')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">📝 Aktivitas 2</button> <button onclick="showSection('metode-eliminasi')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">✂️ Metode Eliminasi</button> <button onclick="showSection('aktivitas-eliminasi')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">📝 Aktivitas 3</button> <button onclick="showSection('latihan-soal')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">🌟 Latihan Soal</button> <button onclick="showSection('belajar-mandiri')" class="tab-btn px-4 py-2 rounded-xl font-semibold text-sm transition-all hover:bg-gray-100">🎓 Belajar Mandiri</button>
+    </div>
+   </nav><!-- Main Content -->
+   <main class="max-w-7xl mx-auto px-4 pb-8"><!-- MATERI SECTION -->
+    <section id="materi" class="section-content">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">📚 Materi Pembelajaran</h2><!-- Tujuan Pembelajaran -->
+       <div class="bg-gradient-to-r from-sky-100 to-blue-100 rounded-xl p-4 mb-6">
+        <h3 class="font-bold text-sky-800 mb-2">🎯 Tujuan Pembelajaran</h3>
+        <p class="text-gray-700">Peserta didik mampu <strong>memahami konsep sistem persamaan linear</strong> serta <strong>menentukan penyelesaiannya menggunakan metode grafik, substitusi, dan eliminasi</strong>, baik secara matematis maupun kontekstual.</p>
+       </div><!-- Pengertian SPLDV -->
+       <div class="mb-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-3">📐 Pengertian Sistem Persamaan Linear Dua Variabel (SPLDV)</h3>
+        <p class="text-gray-700 mb-3">Sistem Persamaan Linear Dua Variabel adalah sistem yang terdiri dari dua persamaan linear dengan dua variabel (biasanya x dan y) yang diselesaikan secara bersamaan.</p>
+        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+         <p class="text-center mb-2 font-semibold">Bentuk Umum SPLDV:</p>
+         <div class="math-display text-center">
+          $$\begin{cases} a_1x + b_1y = c_1 \\ a_2x + b_2y = c_2 \end{cases}$$
+         </div>
+         <p class="text-center mt-3 text-sm text-gray-600">dengan \(a_1, a_2, b_1, b_2, c_1, c_2\) adalah konstanta</p>
+        </div>
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+         <h4 class="font-bold text-green-800 mb-2">💡 Contoh SPLDV:</h4>
+         <div class="math-display">
+          $$\begin{cases} 2x + y = 8 \\ x - y = 1 \end{cases}$$
+         </div>
+         <p class="text-sm text-gray-700 mt-2">Penyelesaian: \(x = 3\) dan \(y = 2\)</p>
+        </div>
+       </div><!-- Metode Penyelesaian -->
+       <h3 class="text-xl font-bold text-gray-800 mb-4">🔧 Metode Penyelesaian SPLDV</h3>
+       <div class="grid md:grid-cols-3 gap-4 mb-6"><!-- Metode Grafik -->
+        <div class="method-box bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border-2 border-purple-200">
+         <div class="text-3xl mb-2">
+          📈
+         </div>
+         <h4 class="font-bold text-purple-800 mb-2">1. Metode Grafik</h4>
+         <p class="text-sm text-gray-700 mb-2">Menggambar kedua garis pada bidang koordinat dan mencari titik potongnya.</p>
+         <ul class="text-xs text-gray-600 space-y-1">
+          <li>✓ Visual dan mudah dipahami</li>
+          <li>✓ Cocok untuk pengenalan konsep</li>
+          <li>✗ Kurang presisi untuk angka desimal</li>
+         </ul>
+        </div><!-- Metode Substitusi -->
+        <div class="method-box bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border-2 border-blue-200">
+         <div class="text-3xl mb-2">
+          🔄
+         </div>
+         <h4 class="font-bold text-blue-800 mb-2">2. Metode Substitusi</h4>
+         <p class="text-sm text-gray-700 mb-2">Mengganti salah satu variabel dengan ekspresi dari persamaan lain.</p>
+         <ul class="text-xs text-gray-600 space-y-1">
+          <li>✓ Presisi tinggi</li>
+          <li>✓ Cocok jika ada variabel yang mudah dinyatakan</li>
+          <li>✗ Bisa kompleks jika koefisien rumit</li>
+         </ul>
+        </div><!-- Metode Eliminasi -->
+        <div class="method-box bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border-2 border-orange-200">
+         <div class="text-3xl mb-2">
+          ✂️
+         </div>
+         <h4 class="font-bold text-orange-800 mb-2">3. Metode Eliminasi</h4>
+         <p class="text-sm text-gray-700 mb-2">Menghilangkan salah satu variabel dengan menjumlahkan atau mengurangkan persamaan.</p>
+         <ul class="text-xs text-gray-600 space-y-1">
+          <li>✓ Cepat dan efisien</li>
+          <li>✓ Presisi tinggi</li>
+          <li>✓ Cocok untuk koefisien besar</li>
+         </ul>
+        </div>
+       </div><!-- Aplikasi Kontekstual -->
+       <div class="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4 border-2 border-yellow-200">
+        <h3 class="text-xl font-bold text-amber-800 mb-3">🌟 Aplikasi dalam Kehidupan</h3>
+        <div class="grid md:grid-cols-2 gap-3">
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-gray-800 mb-1">💰 Masalah Ekonomi</p>
+          <p class="text-sm text-gray-600">Menghitung harga barang, keuntungan, dan modal usaha</p>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-gray-800 mb-1">🚗 Masalah Kecepatan</p>
+          <p class="text-sm text-gray-600">Menghitung jarak, waktu, dan kecepatan perjalanan</p>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-gray-800 mb-1">�� Masalah Campuran</p>
+          <p class="text-sm text-gray-600">Menentukan komposisi larutan atau campuran</p>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-gray-800 mb-1">👥 Masalah Usia</p>
+          <p class="text-sm text-gray-600">Menentukan usia seseorang berdasarkan hubungan</p>
+         </div>
+        </div>
+       </div>
+       <div class="mt-6 text-center"><button onclick="markAsRead('materi'); showSection('metode-grafik')" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold"> Lanjut ke Metode Grafik → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- METODE GRAFIK SECTION -->
+    <section id="metode-grafik" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📈 Metode Grafik</h2>
+         <p class="text-gray-600">Selesaikan SPLDV dengan menggambar grafik!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-grafik')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-grafik')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Penjelasan Metode -->
+       <div class="bg-purple-50 rounded-xl p-4 mb-6 border-2 border-purple-200">
+        <h3 class="font-bold text-purple-800 mb-3">📖 Langkah-Langkah Metode Grafik:</h3>
+        <div class="space-y-4">
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-purple-700 mb-2">Langkah 1: Menentukan Dua Titik pada Setiap Garis</p>
+          <p class="text-gray-700 mb-2">Untuk menggambar garis, kita perlu minimal <strong>dua titik</strong>. Cara termudah adalah mencari:</p>
+          <ul class="list-disc list-inside space-y-1 text-gray-700 ml-4">
+           <li><strong>Titik potong sumbu X</strong> → buat y = 0, lalu cari nilai x</li>
+           <li><strong>Titik potong sumbu Y</strong> → buat x = 0, lalu cari nilai y</li>
+          </ul>
+          <div class="mt-3 bg-purple-50 rounded-lg p-3 border-l-4 border-purple-500">
+           <p class="font-semibold text-purple-800 mb-2">💡 Contoh: Untuk persamaan \(2x + y = 8\)</p>
+           <div class="space-y-2 text-sm">
+            <div>
+             <p class="font-medium text-gray-700">• Titik potong sumbu X (y = 0):</p>
+             <div class="math-display text-sm">
+              $$2x + 0 = 8 \Rightarrow x = 4$$ $$\text{Titik: } (4, 0)$$
+             </div>
+            </div>
+            <div>
+             <p class="font-medium text-gray-700">• Titik potong sumbu Y (x = 0):</p>
+             <div class="math-display text-sm">
+              $$2(0) + y = 8 \Rightarrow y = 8$$ $$\text{Titik: } (0, 8)$$
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-purple-700 mb-2">Langkah 2: Gambar Kedua Garis</p>
+          <p class="text-gray-700">Hubungkan dua titik yang sudah ditemukan untuk setiap persamaan, lalu perpanjang menjadi garis lurus.</p>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-purple-700 mb-2">Langkah 3: Tentukan Titik Potong</p>
+          <p class="text-gray-700">Titik pertemuan kedua garis adalah <strong>penyelesaian SPLDV</strong>. Koordinat titik potong tersebut adalah nilai x dan y yang dicari.</p>
+         </div>
+        </div>
+       </div><!-- Interactive Canvas -->
+       <div class="mb-6">
+        <h3 class="font-bold text-gray-800 mb-3">��� Grafik Interaktif</h3>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+         <div class="bg-gray-50 rounded-xl p-4"><label class="block font-semibold text-gray-700 mb-2">Persamaan 1:</label>
+          <div class="flex gap-2 items-center mb-2"><input type="number" id="a1" value="2" class="w-16 text-center" placeholder="a₁"> <span>x +</span> <input type="number" id="b1" value="1" class="w-16 text-center" placeholder="b₁"> <span>y =</span> <input type="number" id="c1" value="8" class="w-16 text-center" placeholder="c₁">
+          </div>
+          <p class="text-xs text-gray-500">Contoh: 2x + y = 8</p>
+         </div>
+         <div class="bg-gray-50 rounded-xl p-4"><label class="block font-semibold text-gray-700 mb-2">Persamaan 2:</label>
+          <div class="flex gap-2 items-center mb-2"><input type="number" id="a2" value="1" class="w-16 text-center" placeholder="a₂"> <span>x +</span> <input type="number" id="b2" value="-1" class="w-16 text-center" placeholder="b₂"> <span>y =</span> <input type="number" id="c2" value="1" class="w-16 text-center" placeholder="c₂">
+          </div>
+          <p class="text-xs text-gray-500">Contoh: x - y = 1</p>
+         </div>
+        </div>
+        <div class="text-center mb-3"><button onclick="drawGraph()" class="btn-primary text-white px-6 py-2 rounded-xl font-semibold"> 🎨 Gambar Grafik </button>
+        </div>
+        <div class="canvas-container p-4">
+         <canvas id="graphCanvas" width="600" height="600"></canvas>
+        </div>
+        <div id="graph-result" class="mt-4 hidden"></div>
+       </div>
+       <div class="mt-6 text-center mb-6"><button onclick="showSection('aktivitas-grafik')" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold"> Lanjut ke Aktivitas 1 → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- AKTIVITAS GRAFIK SECTION -->
+    <section id="aktivitas-grafik" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📝 Aktivitas 1: Latihan Metode Grafik</h2>
+         <p class="text-gray-600">Kerjakan 10 soal berikut!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('aktivitas-grafik')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('aktivitas-grafik')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Soal Latihan -->
+       <div id="aktivitas-grafik-questions" class="space-y-4">
+        <h3 class="font-bold text-gray-800 mb-3">📝 Soal Latihan</h3>
+       </div>
+       <div class="mt-6 flex gap-3 flex-wrap"><button onclick="generateGrafikQuestions()" class="no-print btn-primary text-white px-4 py-2 rounded-xl font-semibold text-sm"> 🔄 Generate Soal Baru </button> <button onclick="markAsRead('metode-grafik'); showSection('metode-substitusi')" class="no-print bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-xl font-semibold text-sm"> Lanjut ke Metode Substitusi → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- METODE SUBSTITUSI SECTION -->
+    <section id="metode-substitusi" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">🔄 Metode Substitusi</h2>
+         <p class="text-gray-600">Selesaikan SPLDV dengan substitusi!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-substitusi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-substitusi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Penjelasan Metode -->
+       <div class="bg-blue-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
+        <h3 class="font-bold text-blue-800 mb-3">📖 Langkah-Langkah Metode Substitusi:</h3>
+        <div class="space-y-4">
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-blue-700 mb-2">Langkah 1: Ubah Salah Satu Persamaan</p>
+          <p class="text-gray-700 mb-2">Pilih salah satu persamaan, lalu <strong>nyatakan salah satu variabel</strong> (x atau y) dalam bentuk variabel lainnya.</p>
+          <div class="mt-3 bg-blue-50 rounded-lg p-3 border-l-4 border-blue-500">
+           <p class="font-semibold text-blue-800 mb-2">💡 Tips: Pilih persamaan yang mudah diubah!</p>
+           <p class="text-sm text-gray-700">Persamaan yang koefisiennya 1 atau -1 akan lebih mudah diubah.</p>
+           <p class="text-sm text-gray-700 mt-2"><strong>Contoh:</strong> Dari \(x - y = 1\), kita bisa nyatakan:</p>
+           <div class="math-display text-sm">
+            $$x = y + 1 \quad \text{atau} \quad y = x - 1$$
+           </div>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-blue-700 mb-2">Langkah 2: Substitusikan ke Persamaan Lain</p>
+          <p class="text-gray-700 mb-2"><strong>Gantikan</strong> variabel pada persamaan kedua dengan bentuk yang sudah kita dapatkan di Langkah 1.</p>
+          <p class="text-sm text-gray-600 italic">Substitusi artinya "mengganti" atau "memasukkan"</p>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-blue-700 mb-2">Langkah 3: Selesaikan Persamaan Satu Variabel</p>
+          <p class="text-gray-700">Setelah substitusi, persamaan hanya akan memiliki satu variabel. Selesaikan untuk mendapat nilai variabel tersebut.</p>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-blue-700 mb-2">Langkah 4: Cari Variabel Lainnya</p>
+          <p class="text-gray-700">Substitusikan nilai yang sudah diperoleh ke salah satu persamaan awal untuk mendapat nilai variabel yang lain.</p>
+         </div>
+        </div>
+       </div><!-- Contoh Interaktif -->
+       <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
+        <h3 class="font-bold text-blue-800 mb-3">💡 Contoh Penyelesaian:</h3>
+        <div class="space-y-3">
+         <div>
+          <p class="font-semibold text-gray-800">Diketahui SPLDV:</p>
+          <div class="math-display">
+           $$\begin{cases} 2x + y = 8 \quad \text{...(1)} \\ x - y = 1 \quad \text{...(2)} \end{cases}$$
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-blue-700 mb-2">Langkah 1: Nyatakan x dari persamaan (2)</p>
+          <div class="math-display">
+           $$x - y = 1$$ $$x = y + 1 \quad \text{...(3)}$$
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-blue-700 mb-2">Langkah 2: Substitusi (3) ke persamaan (1)</p>
+          <div class="math-display">
+           $$2x + y = 8$$ $$2(y + 1) + y = 8$$ $$2y + 2 + y = 8$$ $$3y = 6$$ $$y = 2$$
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-blue-700 mb-2">Langkah 3: Substitusi y = 2 ke persamaan (3)</p>
+          <div class="math-display">
+           $$x = y + 1$$ $$x = 2 + 1$$ $$x = 3$$
+          </div>
+         </div>
+         <div class="bg-green-100 rounded-lg p-3 border-2 border-green-500">
+          <p class="font-bold text-green-800 text-center">✓ Jadi, penyelesaiannya adalah \(x = 3\) dan \(y = 2\)</p>
+         </div>
+        </div>
+       </div>
+       <div class="mt-6 text-center mb-6"><button onclick="showSection('aktivitas-substitusi')" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold"> Lanjut ke Aktivitas 2 → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- AKTIVITAS SUBSTITUSI SECTION -->
+    <section id="aktivitas-substitusi" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📝 Aktivitas 2: Latihan Metode Substitusi</h2>
+         <p class="text-gray-600">Kerjakan 10 soal berikut!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('aktivitas-substitusi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('aktivitas-substitusi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Soal Latihan -->
+       <div id="aktivitas-substitusi-questions" class="space-y-4">
+        <h3 class="font-bold text-gray-800 mb-3">📝 Soal Latihan</h3>
+       </div>
+       <div class="mt-6 flex gap-3 flex-wrap"><button onclick="generateSubstitusiQuestions()" class="no-print btn-primary text-white px-4 py-2 rounded-xl font-semibold text-sm"> 🔄 Generate Soal Baru </button> <button onclick="markAsRead('metode-substitusi'); showSection('metode-eliminasi')" class="no-print bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-xl font-semibold text-sm"> Lanjut ke Metode Eliminasi → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- METODE ELIMINASI SECTION -->
+    <section id="metode-eliminasi" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">✂️ Metode Eliminasi</h2>
+         <p class="text-gray-600">Selesaikan SPLDV dengan eliminasi!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-eliminasi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-eliminasi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Penjelasan Metode -->
+       <div class="bg-orange-50 rounded-xl p-4 mb-6 border-2 border-orange-200">
+        <h3 class="font-bold text-orange-800 mb-3">📖 Langkah-Langkah Metode Eliminasi:</h3>
+        <div class="space-y-4">
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-orange-700 mb-2">Langkah 1: Samakan Koefisien Salah Satu Variabel</p>
+          <p class="text-gray-700 mb-2">Pilih variabel yang akan dieliminasi (x atau y), lalu <strong>samakan koefisiennya</strong> pada kedua persamaan.</p>
+          <p class="text-sm text-gray-600 italic">Jika belum sama, kalikan persamaan dengan bilangan yang sesuai.</p>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-orange-700 mb-2">Langkah 2: Eliminasi Variabel</p>
+          <p class="text-gray-700 mb-3">Hilangkan satu variabel dengan cara:</p>
+          <div class="grid md:grid-cols-2 gap-3">
+           <div class="bg-red-50 rounded-lg p-3 border-2 border-red-300">
+            <p class="font-semibold text-red-700 mb-2">🔴 Jika Koefisien SAMA</p>
+            <p class="text-sm text-gray-700 mb-2">→ <strong>KURANGKAN</strong> kedua persamaan</p>
+            <div class="math-display text-xs">
+             $$\begin{array}{rcr} 2x + y &amp; = &amp; 8 \\ 2x - y &amp; = &amp; 2 \\ \hline 0 + 2y &amp; = &amp; 6 \end{array}$$
+            </div>
+           </div>
+           <div class="bg-green-50 rounded-lg p-3 border-2 border-green-300">
+            <p class="font-semibold text-green-700 mb-2">🟢 Jika Koefisien BERLAWANAN</p>
+            <p class="text-sm text-gray-700 mb-2">→ <strong>JUMLAHKAN</strong> kedua persamaan</p>
+            <div class="math-display text-xs">
+             $$\begin{array}{rcr} 2x + y &amp; = &amp; 8 \\ -2x + 3y &amp; = &amp; 4 \\ \hline 0 + 4y &amp; = &amp; 12 \end{array}$$
+            </div>
+           </div>
+          </div>
+          <div class="mt-3 bg-orange-50 rounded-lg p-3 border-l-4 border-orange-500">
+           <p class="font-semibold text-orange-800">💡 Cara Mengingat:</p>
+           <ul class="text-sm text-gray-700 space-y-1 mt-2">
+            <li>• Koefisien <strong>SAMA tanda</strong> (++ atau --) → <strong>KURANGKAN</strong></li>
+            <li>• Koefisien <strong>BEDA tanda</strong> (+- atau -+) → <strong>JUMLAHKAN</strong></li>
+           </ul>
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-orange-700 mb-2">Langkah 3: Selesaikan Persamaan</p>
+          <p class="text-gray-700">Setelah satu variabel hilang, selesaikan persamaan untuk mendapat nilai variabel yang tersisa.</p>
+         </div>
+         <div class="bg-white rounded-lg p-4">
+          <p class="font-bold text-orange-700 mb-2">Langkah 4: Eliminasi Variabel Lainnya</p>
+          <p class="text-gray-700">Ulangi proses eliminasi untuk variabel yang lain, atau substitusikan nilai yang sudah diperoleh.</p>
+         </div>
+        </div>
+       </div><!-- Contoh Interaktif -->
+       <div class="bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl p-4 mb-6 border-2 border-orange-200">
+        <h3 class="font-bold text-orange-800 mb-3">💡 Contoh Penyelesaian:</h3>
+        <div class="space-y-3">
+         <div>
+          <p class="font-semibold text-gray-800">Diketahui SPLDV:</p>
+          <div class="math-display">
+           $$\begin{cases} 2x + y = 8 \quad \text{...(1)} \\ x - y = 1 \quad \text{...(2)} \end{cases}$$
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-orange-700 mb-2">Eliminasi variabel y (koefisien y sudah berlawanan):</p>
+          <div class="math-display">
+           $$\begin{array}{rcrcr} 2x &amp; + &amp; y &amp; = &amp; 8 \\ x &amp; - &amp; y &amp; = &amp; 1 \\ \hline 3x &amp; &amp; &amp; = &amp; 9 \\ \end{array}$$ $$x = 3$$
+          </div>
+         </div>
+         <div class="bg-white rounded-lg p-3">
+          <p class="font-semibold text-orange-700 mb-2">Eliminasi variabel x (kalikan persamaan (2) dengan 2):</p>
+          <div class="math-display">
+           $$\begin{array}{rcrcrl} 2x &amp; + &amp; y &amp; = &amp; 8 &amp; \\ 2x &amp; - &amp; 2y &amp; = &amp; 2 &amp; \text{(persamaan (2) × 2)} \\ \hline &amp; &amp; 3y &amp; = &amp; 6 &amp; \\ \end{array}$$ $$y = 2$$
+          </div>
+         </div>
+         <div class="bg-green-100 rounded-lg p-3 border-2 border-green-500">
+          <p class="font-bold text-green-800 text-center">✓ Jadi, penyelesaiannya adalah \(x = 3\) dan \(y = 2\)</p>
+         </div>
+        </div>
+       </div>
+       <div class="mt-6 text-center mb-6"><button onclick="showSection('aktivitas-eliminasi')" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold"> Lanjut ke Aktivitas 3 → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- AKTIVITAS ELIMINASI SECTION -->
+    <section id="aktivitas-eliminasi" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📝 Aktivitas 3: Latihan Metode Eliminasi</h2>
+         <p class="text-gray-600">Kerjakan 10 soal berikut!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('aktivitas-eliminasi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('aktivitas-eliminasi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div><!-- Soal Latihan -->
+       <div id="aktivitas-eliminasi-questions" class="space-y-4">
+        <h3 class="font-bold text-gray-800 mb-3">📝 Soal Latihan</h3>
+       </div>
+       <div class="mt-6 flex gap-3 flex-wrap"><button onclick="generateEliminasiQuestions()" class="no-print btn-primary text-white px-4 py-2 rounded-xl font-semibold text-sm"> 🔄 Generate Soal Baru </button> <button onclick="markAsRead('metode-eliminasi'); showSection('latihan-soal')" class="no-print bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-xl font-semibold text-sm"> Lanjut ke Latihan Soal → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- LATIHAN SOAL SECTION -->
+    <section id="latihan-soal" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <div class="flex justify-between items-start mb-4 flex-wrap gap-2">
+        <div>
+         <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📝 Latihan Soal Kontekstual</h2>
+         <p class="text-gray-600">Aplikasi SPLDV dalam kehidupan sehari-hari!</p>
+        </div>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('latihan-soal')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('latihan-soal')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        </div>
+       </div>
+       <div id="latihan-soal-questions" class="space-y-6"></div>
+       <div class="mt-6 flex gap-3 flex-wrap"><button onclick="generateLatihanSoal()" class="no-print btn-primary text-white px-4 py-2 rounded-xl font-semibold text-sm"> 🔄 Generate Soal Baru </button> <button onclick="markAsRead('latihan-soal'); showSection('belajar-mandiri')" class="no-print bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 py-2 rounded-xl font-semibold text-sm"> Lanjut ke Belajar Mandiri → </button>
+       </div>
+      </div>
+     </div>
+    </section><!-- BELAJAR MANDIRI SECTION -->
+    <section id="belajar-mandiri" class="section-content hidden">
+     <div class="activity-card mb-6">
+      <div class="activity-inner">
+       <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">🎓 Belajar Mandiri</h2>
+       <p class="text-gray-600 mb-6">Pilih metode penyelesaian, kerjakan soal, lalu cocokkan jawabanmu!</p><!-- Pilihan Metode -->
+       <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 mb-6 border-2 border-indigo-200"><label class="block font-semibold text-gray-700 mb-3">Pilih Metode:</label> <select id="mandiri-method" onchange="generateMandiriSoal()" class="w-full text-lg font-semibold"> <option value="">-- Pilih Metode Penyelesaian --</option> <option value="grafik">Metode Grafik</option> <option value="substitusi">Metode Substitusi</option> <option value="eliminasi">Metode Eliminasi</option> <option value="kontekstual">Soal Kontekstual</option> </select>
+       </div><!-- Soal Container -->
+       <div id="mandiri-soal-container" class="hidden">
+        <div class="bg-white rounded-xl p-6 border-2 border-gray-200 mb-4">
+         <div id="mandiri-soal" class="mb-6"></div>
+         <div id="mandiri-input-area" class="mb-4"></div><button onclick="checkMandiriAnswer()" id="check-btn" class="btn-primary text-white px-6 py-3 rounded-xl font-semibold w-full mb-3"> ✓ Cek Jawaban </button>
+         <div id="mandiri-result" class="hidden mt-4"></div>
+        </div>
+        <div class="flex gap-3 flex-wrap"><button onclick="generateMandiriSoal()" class="btn-primary text-white px-4 py-2 rounded-xl font-semibold text-sm"> 🔄 Soal Berikutnya </button> <button onclick="resetMandiri()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-xl font-semibold text-sm"> ↺ Reset </button>
+        </div><!-- Score -->
+        <div class="mt-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-4 border-2 border-green-200">
+         <div class="flex justify-between items-center">
+          <div>
+           <p class="text-sm text-gray-600">Skor Anda</p>
+           <p class="text-2xl font-bold text-green-600" id="mandiri-score">0 / 0</p>
+          </div>
+          <div class="text-right">
+           <p class="text-sm text-gray-600">Persentase</p>
+           <p class="text-2xl font-bold text-blue-600" id="mandiri-percentage">0%</p>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+   </main><!-- Footer -->
+   <footer class="no-print bg-white border-t mt-8 py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+     <p class="text-gray-600 text-sm">📊 Pembelajaran Sistem Persamaan Linear Interaktif</p>
+     <p class="text-gray-400 text-xs mt-1">Metode Grafik, Substitusi &amp; Eliminasi</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Configuration
+    const defaultConfig = {
+      main_title: 'Sistem Persamaan Linear',
+      student_name_label: 'Nama Siswa:'
+    };
+    
+    let config = { ...defaultConfig };
+    let completedSections = new Set();
+    
+    // Store answers
+    let aktivitasAnswers = {
+      'aktivitas-grafik': [],
+      'aktivitas-substitusi': [],
+      'aktivitas-eliminasi': [],
+      'latihan-soal': []
+    };
+    
+    // Mandiri state
+    let mandiriState = {
+      currentQuestion: null,
+      correctCount: 0,
+      totalAttempts: 0
+    };
+    
+    // Element SDK Integration
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          updateUI();
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['main_title', config.main_title || defaultConfig.main_title],
+          ['student_name_label', config.student_name_label || defaultConfig.student_name_label]
+        ])
+      });
+    }
+    
+    function updateUI() {
+      const title = document.getElementById('main-title');
+      const studentLabel = document.getElementById('student-name-label');
+      
+      if (title) title.textContent = config.main_title || defaultConfig.main_title;
+      if (studentLabel) studentLabel.textContent = config.student_name_label || defaultConfig.student_name_label;
+    }
+    
+    // Section Navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
+      document.getElementById(sectionId).classList.remove('hidden');
+      
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('hover:bg-gray-100');
+      });
+      
+      const activeBtn = document.querySelector(`[onclick="showSection('${sectionId}')"]`);
+      if (activeBtn) {
+        activeBtn.classList.add('tab-active');
+        activeBtn.classList.remove('hover:bg-gray-100');
+      }
+      
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Render MathJax after showing section
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+    
+    // Progress Tracking
+    function markAsRead(section) {
+      completedSections.add(section);
+      updateProgress();
+    }
+    
+    function updateProgress() {
+      const totalSections = 5;
+      const completed = completedSections.size;
+      const percentage = Math.round((completed / totalSections) * 100);
+      
+      document.getElementById('progress-bar').style.width = percentage + '%';
+      document.getElementById('progress-text').textContent = percentage + '%';
+    }
+    
+    // Helper Functions
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    function gcd(a, b) {
+      return b === 0 ? Math.abs(a) : gcd(b, a % b);
+    }
+    
+    // Draw Graph Function
+    // Helper to format number (remove .00)
+    function formatNumber(num) {
+      return num % 1 === 0 ? num.toString() : num.toFixed(2);
+    }
+    
+    // Helper to format coefficient
+    function formatCoefficient(coef, variable) {
+      if (coef === 0) return '';
+      if (coef === 1) return variable;
+      if (coef === -1) return '-' + variable;
+      return coef + variable;
+    }
+    
+    function drawGraph() {
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const scale = 40;
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, width, height);
+      
+      // Draw grid
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      
+      for (let i = -10; i <= 10; i++) {
+        if (i !== 0) {
+          // Vertical lines
+          ctx.beginPath();
+          ctx.moveTo(centerX + i * scale, 0);
+          ctx.lineTo(centerX + i * scale, height);
+          ctx.stroke();
+          
+          // Horizontal lines
+          ctx.beginPath();
+          ctx.moveTo(0, centerY - i * scale);
+          ctx.lineTo(width, centerY - i * scale);
+          ctx.stroke();
+        }
+      }
+      
+      // Draw axes
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 2;
+      
+      // X-axis
+      ctx.beginPath();
+      ctx.moveTo(0, centerY);
+      ctx.lineTo(width, centerY);
+      ctx.stroke();
+      
+      // Y-axis
+      ctx.beginPath();
+      ctx.moveTo(centerX, 0);
+      ctx.lineTo(centerX, height);
+      ctx.stroke();
+      
+      // Draw axis labels
+      ctx.fillStyle = '#475569';
+      ctx.font = '12px Poppins';
+      ctx.textAlign = 'center';
+      
+      for (let i = -10; i <= 10; i++) {
+        if (i !== 0) {
+          ctx.fillText(i, centerX + i * scale, centerY + 15);
+          ctx.fillText(i, centerX - 15, centerY - i * scale);
+        }
+      }
+      
+      ctx.fillText('x', width - 20, centerY - 10);
+      ctx.fillText('y', centerX + 15, 20);
+      
+      // Get equation values
+      const a1 = parseFloat(document.getElementById('a1').value) || 0;
+      const b1 = parseFloat(document.getElementById('b1').value) || 0;
+      const c1 = parseFloat(document.getElementById('c1').value) || 0;
+      
+      const a2 = parseFloat(document.getElementById('a2').value) || 0;
+      const b2 = parseFloat(document.getElementById('b2').value) || 0;
+      const c2 = parseFloat(document.getElementById('c2').value) || 0;
+      
+      // Draw lines
+      function drawLine(a, b, c, color) {
+        if (b === 0) {
+          // Vertical line: x = c/a
+          const x = c / a;
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(centerX + x * scale, 0);
+          ctx.lineTo(centerX + x * scale, height);
+          ctx.stroke();
+        } else {
+          // y = (c - ax) / b
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          
+          let started = false;
+          for (let x = -15; x <= 15; x += 0.1) {
+            const y = (c - a * x) / b;
+            if (Math.abs(y) <= 15) {
+              const canvasX = centerX + x * scale;
+              const canvasY = centerY - y * scale;
+              
+              if (!started) {
+                ctx.moveTo(canvasX, canvasY);
+                started = true;
+              } else {
+                ctx.lineTo(canvasX, canvasY);
+              }
+            }
+          }
+          ctx.stroke();
+        }
+      }
+      
+      drawLine(a1, b1, c1, '#8b5cf6');
+      drawLine(a2, b2, c2, '#3b82f6');
+      
+      // Find intersection
+      const det = a1 * b2 - a2 * b1;
+      
+      if (Math.abs(det) > 0.001) {
+        const x = (c1 * b2 - c2 * b1) / det;
+        const y = (a1 * c2 - a2 * c1) / det;
+        
+        // Draw intersection point
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(centerX + x * scale, centerY - y * scale, 6, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        // Display result
+        const resultDiv = document.getElementById('graph-result');
+        resultDiv.innerHTML = `
+          <div class="bg-green-100 border-2 border-green-500 rounded-xl p-4">
+            <p class="font-bold text-green-800 text-lg mb-2">✓ Titik Potong Ditemukan!</p>
+            <p class="text-green-700">Penyelesaian SPLDV: <strong>x = ${formatNumber(x)}</strong> dan <strong>y = ${formatNumber(y)}</strong></p>
+          </div>
+        `;
+        resultDiv.classList.remove('hidden');
+      } else {
+        const resultDiv = document.getElementById('graph-result');
+        resultDiv.innerHTML = `
+          <div class="bg-yellow-100 border-2 border-yellow-500 rounded-xl p-4">
+            <p class="font-bold text-yellow-800 text-lg mb-2">⚠️ Tidak Ada Titik Potong</p>
+            <p class="text-yellow-700">Kedua garis sejajar atau berimpit (tidak ada solusi tunggal)</p>
+          </div>
+        `;
+        resultDiv.classList.remove('hidden');
+      }
+    }
+    
+    // Generate Questions for Metode Grafik
+    function generateGrafikQuestions() {
+      const questions = [];
+      
+      // Generate 5 pilihan ganda
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'multiple',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      // Generate 5 isian singkat
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'short',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      let html = '';
+      aktivitasAnswers['aktivitas-grafik'] = [];
+      
+      // Pilihan Ganda
+      html += '<h3 class="font-bold text-gray-800 mb-3 text-lg">📝 Bagian A: Pilihan Ganda</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Pilihlah jawaban yang paling tepat!</p>';
+      
+      questions.slice(0, 5).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        // Generate wrong options
+        const options = [
+          { x: q.x, y: q.y, label: 'A' },
+          { x: q.x + 1, y: q.y, label: 'B' },
+          { x: q.x, y: q.y + 1, label: 'C' },
+          { x: q.x - 1, y: q.y - 1, label: 'D' }
+        ];
+        
+        // Shuffle options
+        for (let i = options.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [options[i], options[j]] = [options[j], options[i]];
+        }
+        
+        const correctOption = options.find(opt => opt.x === q.x && opt.y === q.y);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 1}. Penyelesaian SPLDV berikut adalah...</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3 space-y-2">
+              ${options.map(opt => `
+                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <input type="radio" name="grafik-pg-${idx}" value="${opt.label}" class="w-4 h-4">
+                  <span class="font-medium">${opt.label}.</span>
+                  <span>x = ${opt.x} dan y = ${opt.y}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-grafik'].push(correctOption.label);
+      });
+      
+      // Isian Singkat
+      html += '<h3 class="font-bold text-gray-800 mb-3 mt-6 text-lg">✏️ Bagian B: Isian Singkat</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Lengkapi jawaban dengan tepat!</p>';
+      
+      questions.slice(5, 10).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 6}. Tentukan penyelesaian SPLDV berikut dengan metode grafik:</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700 mb-2 block">Tentukan dua titik untuk setiap persamaan:</label>
+              <textarea class="w-full mt-1" rows="2" placeholder="Contoh: Persamaan 1: (4,0) dan (0,8)..."></textarea>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-sm font-medium text-gray-700">x =</label>
+                <input type="number" class="w-full" data-answer="${q.x}">
+              </div>
+              <div>
+                <label class="text-sm font-medium text-gray-700">y =</label>
+                <input type="number" class="w-full" data-answer="${q.y}">
+              </div>
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-grafik'].push(`x = ${q.x}, y = ${q.y}`);
+      });
+      
+      const containerGrafik = document.getElementById('aktivitas-grafik-questions');
+      if (containerGrafik) {
+        containerGrafik.innerHTML = html;
+      }
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+    
+    // Generate Questions for Metode Substitusi
+    function generateSubstitusiQuestions() {
+      const questions = [];
+      
+      // Generate 5 pilihan ganda
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'multiple',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      // Generate 5 isian singkat
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'short',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      let html = '';
+      aktivitasAnswers['aktivitas-substitusi'] = [];
+      
+      // Pilihan Ganda
+      html += '<h3 class="font-bold text-gray-800 mb-3 text-lg">📝 Bagian A: Pilihan Ganda</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Pilihlah jawaban yang paling tepat!</p>';
+      
+      questions.slice(0, 5).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        // Generate wrong options
+        const options = [
+          { x: q.x, y: q.y, label: 'A' },
+          { x: q.x + 1, y: q.y, label: 'B' },
+          { x: q.x, y: q.y + 1, label: 'C' },
+          { x: q.x - 1, y: q.y - 1, label: 'D' }
+        ];
+        
+        // Shuffle options
+        for (let i = options.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [options[i], options[j]] = [options[j], options[i]];
+        }
+        
+        const correctOption = options.find(opt => opt.x === q.x && opt.y === q.y);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 1}. Penyelesaian SPLDV berikut adalah...</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3 space-y-2">
+              ${options.map(opt => `
+                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <input type="radio" name="substitusi-pg-${idx}" value="${opt.label}" class="w-4 h-4">
+                  <span class="font-medium">${opt.label}.</span>
+                  <span>x = ${opt.x} dan y = ${opt.y}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-substitusi'].push(correctOption.label);
+      });
+      
+      // Isian Singkat
+      html += '<h3 class="font-bold text-gray-800 mb-3 mt-6 text-lg">✏️ Bagian B: Isian Singkat</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Selesaikan dengan metode substitusi!</p>';
+      
+      questions.slice(5, 10).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 6}. Selesaikan SPLDV berikut dengan metode substitusi:</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700">Langkah penyelesaian:</label>
+              <textarea class="w-full mt-1" rows="3" placeholder="Tuliskan langkah-langkahnya..."></textarea>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-sm font-medium text-gray-700">x =</label>
+                <input type="number" class="w-full" data-answer="${q.x}">
+              </div>
+              <div>
+                <label class="text-sm font-medium text-gray-700">y =</label>
+                <input type="number" class="w-full" data-answer="${q.y}">
+              </div>
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-substitusi'].push(`x = ${q.x}, y = ${q.y}`);
+      });
+      
+      const containerSubstitusi = document.getElementById('aktivitas-substitusi-questions');
+      if (containerSubstitusi) {
+        containerSubstitusi.innerHTML = html;
+      }
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+    
+    // Generate Questions for Metode Eliminasi
+    function generateEliminasiQuestions() {
+      const questions = [];
+      
+      // Generate 5 pilihan ganda
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'multiple',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      // Generate 5 isian singkat
+      for (let i = 0; i < 5; i++) {
+        const x = randomInt(1, 5);
+        const y = randomInt(1, 5);
+        
+        const a1 = randomInt(1, 3);
+        const b1 = randomInt(-3, 3);
+        if (b1 === 0) { i--; continue; }
+        const c1 = a1 * x + b1 * y;
+        
+        const a2 = randomInt(1, 3);
+        const b2 = randomInt(-3, 3);
+        if (b2 === 0) { i--; continue; }
+        const c2 = a2 * x + b2 * y;
+        
+        questions.push({
+          type: 'short',
+          a1, b1, c1, a2, b2, c2, x, y
+        });
+      }
+      
+      let html = '';
+      aktivitasAnswers['aktivitas-eliminasi'] = [];
+      
+      // Pilihan Ganda
+      html += '<h3 class="font-bold text-gray-800 mb-3 text-lg">📝 Bagian A: Pilihan Ganda</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Pilihlah jawaban yang paling tepat!</p>';
+      
+      questions.slice(0, 5).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        // Generate wrong options
+        const options = [
+          { x: q.x, y: q.y, label: 'A' },
+          { x: q.x + 1, y: q.y, label: 'B' },
+          { x: q.x, y: q.y + 1, label: 'C' },
+          { x: q.x - 1, y: q.y - 1, label: 'D' }
+        ];
+        
+        // Shuffle options
+        for (let i = options.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [options[i], options[j]] = [options[j], options[i]];
+        }
+        
+        const correctOption = options.find(opt => opt.x === q.x && opt.y === q.y);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 1}. Penyelesaian SPLDV berikut adalah...</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3 space-y-2">
+              ${options.map(opt => `
+                <label class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+                  <input type="radio" name="eliminasi-pg-${idx}" value="${opt.label}" class="w-4 h-4">
+                  <span class="font-medium">${opt.label}.</span>
+                  <span>x = ${opt.x} dan y = ${opt.y}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-eliminasi'].push(correctOption.label);
+      });
+      
+      // Isian Singkat
+      html += '<h3 class="font-bold text-gray-800 mb-3 mt-6 text-lg">✏️ Bagian B: Isian Singkat</h3>';
+      html += '<p class="text-gray-600 mb-4 text-sm">Selesaikan dengan metode eliminasi!</p>';
+      
+      questions.slice(5, 10).forEach((q, idx) => {
+        const eq1 = formatEquation(q.a1, q.b1, q.c1);
+        const eq2 = formatEquation(q.a2, q.b2, q.c2);
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4 border-2 border-gray-200 mb-4">
+            <p class="font-semibold mb-3">${idx + 6}. Selesaikan SPLDV berikut dengan metode eliminasi:</p>
+            <div class="math-display">
+              $$\\begin{cases} ${eq1} \\\\ ${eq2} \\end{cases}$$
+            </div>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700">Langkah penyelesaian:</label>
+              <textarea class="w-full mt-1" rows="3" placeholder="Tuliskan langkah-langkahnya..."></textarea>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-sm font-medium text-gray-700">x =</label>
+                <input type="number" class="w-full" data-answer="${q.x}">
+              </div>
+              <div>
+                <label class="text-sm font-medium text-gray-700">y =</label>
+                <input type="number" class="w-full" data-answer="${q.y}">
+              </div>
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['aktivitas-eliminasi'].push(`x = ${q.x}, y = ${q.y}`);
+      });
+      
+      const containerEliminasi = document.getElementById('aktivitas-eliminasi-questions');
+      if (containerEliminasi) {
+        containerEliminasi.innerHTML = html;
+      }
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+    
+    // Helper to format equation
+    function formatEquation(a, b, c) {
+      let equation = '';
+      
+      // Format x term (jangan tampilkan jika a = 0)
+      if (a !== 0) {
+        if (a === 1) equation += 'x';
+        else if (a === -1) equation += '-x';
+        else equation += a + 'x';
+      }
+      
+      // Format y term (jangan tampilkan jika b = 0)
+      if (b !== 0) {
+        if (equation !== '') {
+          // Ada term sebelumnya
+          if (b > 0) {
+            if (b === 1) equation += ' + y';
+            else equation += ' + ' + b + 'y';
+          } else {
+            if (b === -1) equation += ' - y';
+            else equation += ' - ' + Math.abs(b) + 'y';
+          }
+        } else {
+          // Tidak ada term sebelumnya
+          if (b === 1) equation += 'y';
+          else if (b === -1) equation += '-y';
+          else equation += b + 'y';
+        }
+      }
+      
+      equation += ' = ' + c;
+      
+      return equation;
+    }
+    
+    // Generate Latihan Soal Kontekstual
+    function generateLatihanSoal() {
+      const contexts = [
+        {
+          type: 'ekonomi',
+          template: (p1, p2, t1, t2) => ({
+            soal: `Di sebuah toko, harga ${p1} pensil dan ${p2} buku adalah Rp${t1.toLocaleString('id-ID')}. Sedangkan harga ${p2} pensil dan ${p1} buku adalah Rp${t2.toLocaleString('id-ID')}. Tentukan harga 1 pensil dan 1 buku!`,
+            x: Math.round((t1 * p1 - t2 * p2) / (p1 * p1 - p2 * p2)),
+            y: Math.round((t2 - (Math.round((t1 * p1 - t2 * p2) / (p1 * p1 - p2 * p2))) * p2) / p1)
+          })
+        },
+        {
+          type: 'usia',
+          template: (a, b) => {
+            const x = randomInt(20, 40);
+            const y = randomInt(10, 20);
+            return {
+              soal: `Jumlah usia Ayah dan Ibu adalah ${x + y} tahun. Selisih usia mereka adalah ${x - y} tahun. Tentukan usia Ayah dan Ibu!`,
+              x: x,
+              y: y
+            };
+          }
+        },
+        {
+          type: 'geometri',
+          template: () => {
+            const p = randomInt(20, 40);
+            const l = randomInt(30, 60);
+            const x = randomInt(5, 15);
+            const y = p - x;
+            return {
+              soal: `Keliling sebuah persegi panjang adalah ${2 * p} cm dan luasnya ${l} cm². Tentukan panjang dan lebar persegi panjang tersebut!`,
+              x: x,
+              y: y
+            };
+          }
+        }
+      ];
+      
+      let html = '';
+      aktivitasAnswers['latihan-soal'] = [];
+      
+      for (let i = 0; i < 5; i++) {
+        const context = contexts[randomInt(0, contexts.length - 1)];
+        let question;
+        
+        if (context.type === 'ekonomi') {
+          const p1 = randomInt(2, 5);
+          const p2 = randomInt(2, 5);
+          const x = randomInt(2, 5) * 1000;
+          const y = randomInt(3, 8) * 1000;
+          const t1 = p1 * x + p2 * y;
+          const t2 = p2 * x + p1 * y;
+          question = context.template(p1, p2, t1, t2);
+        } else {
+          question = context.template();
+        }
+        
+        html += `
+          <div class="bg-gray-50 rounded-xl p-4">
+            <p class="font-semibold mb-3">${i + 1}. ${question.soal}</p>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700">Model Matematika (SPLDV):</label>
+              <textarea class="w-full mt-1" rows="2" placeholder="Tuliskan sistem persamaan..."></textarea>
+            </div>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700">Penyelesaian:</label>
+              <textarea class="w-full mt-1" rows="3" placeholder="Tuliskan langkah penyelesaian..."></textarea>
+            </div>
+            <div class="mt-3">
+              <label class="text-sm font-medium text-gray-700">Jawaban Akhir:</label>
+              <input type="text" class="w-full" placeholder="Tuliskan jawaban lengkap...">
+            </div>
+          </div>
+        `;
+        
+        aktivitasAnswers['latihan-soal'].push(`x = ${question.x}, y = ${question.y}`);
+      }
+      
+      document.getElementById('latihan-soal-questions').innerHTML = html;
+    }
+    
+    // Belajar Mandiri Functions
+    function generateMandiriSoal() {
+      const method = document.getElementById('mandiri-method').value;
+      if (!method) return;
+      
+      document.getElementById('mandiri-soal-container').classList.remove('hidden');
+      document.getElementById('mandiri-result').classList.add('hidden');
+      
+      const soalDiv = document.getElementById('mandiri-soal');
+      const inputDiv = document.getElementById('mandiri-input-area');
+      
+      const x = randomInt(1, 5);
+      const y = randomInt(1, 5);
+      
+      const a1 = randomInt(1, 3);
+      const b1 = randomInt(-3, 3);
+      const c1 = a1 * x + b1 * y;
+      
+      const a2 = randomInt(1, 3);
+      const b2 = randomInt(-3, 3);
+      const c2 = a2 * x + b2 * y;
+      
+      if (method === 'kontekstual') {
+        const contexts = [
+          `Harga ${a1} apel dan ${Math.abs(b1)} jeruk adalah Rp${c1 * 1000}. Harga ${a2} apel dan ${Math.abs(b2)} jeruk adalah Rp${c2 * 1000}. Berapa harga 1 apel dan 1 jeruk?`,
+          `Jumlah dua bilangan adalah ${c1} dan selisihnya ${Math.abs(c1 - c2)}. Tentukan kedua bilangan tersebut!`,
+          `Keliling persegi panjang ${c1} cm. Jika panjang ${a1} kali lebar, tentukan panjang dan lebar!`
+        ];
+        
+        soalDiv.innerHTML = `
+          <p class="font-semibold mb-4">${contexts[randomInt(0, contexts.length - 1)]}</p>
+        `;
+      } else {
+        soalDiv.innerHTML = `
+          <p class="font-semibold mb-4">Selesaikan SPLDV berikut dengan metode ${method}:</p>
+          <div class="math-display">
+            $$\\begin{cases} ${a1}x ${b1 >= 0 ? '+' : ''} ${b1}y = ${c1} \\\\ ${a2}x ${b2 >= 0 ? '+' : ''} ${b2}y = ${c2} \\end{cases}$$
+          </div>
+        `;
+      }
+      
+      inputDiv.innerHTML = `
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="text-sm font-medium text-gray-700">x =</label>
+            <input type="number" id="mandiri-x" class="w-full">
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-700">y =</label>
+            <input type="number" id="mandiri-y" class="w-full">
+          </div>
+        </div>
+      `;
+      
+      mandiriState.currentQuestion = { x, y, method };
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+    
+    function checkMandiriAnswer() {
+      const question = mandiriState.currentQuestion;
+      if (!question) return;
+      
+      const userX = parseInt(document.getElementById('mandiri-x').value);
+      const userY = parseInt(document.getElementById('mandiri-y').value);
+      
+      const isCorrect = userX === question.x && userY === question.y;
+      
+      const resultDiv = document.getElementById('mandiri-result');
+      
+      if (isCorrect) {
+        resultDiv.innerHTML = `
+          <div class="bg-green-100 border-2 border-green-500 rounded-xl p-4">
+            <p class="text-green-800 font-bold text-lg">✓ Jawaban Benar!</p>
+            <p class="text-green-700 mt-2">Penyelesaian: x = ${question.x} dan y = ${question.y}</p>
+          </div>
+        `;
+        document.getElementById('mandiri-x').classList.add('correct-answer');
+        document.getElementById('mandiri-y').classList.add('correct-answer');
+      } else {
+        resultDiv.innerHTML = `
+          <div class="bg-red-100 border-2 border-red-500 rounded-xl p-4">
+            <p class="text-red-800 font-bold text-lg">✗ Jawaban Salah</p>
+            <p class="text-red-700 mt-2">Jawaban yang benar: x = ${question.x} dan y = ${question.y}</p>
+            <p class="text-red-600 text-sm mt-1">Jawaban Anda: x = ${userX || '(kosong)'}, y = ${userY || '(kosong)'}</p>
+          </div>
+        `;
+        document.getElementById('mandiri-x').classList.add('wrong-answer');
+        document.getElementById('mandiri-y').classList.add('wrong-answer');
+      }
+      
+      resultDiv.classList.remove('hidden');
+      
+      mandiriState.totalAttempts++;
+      if (isCorrect) mandiriState.correctCount++;
+      
+      updateMandiriScore();
+    }
+    
+    function updateMandiriScore() {
+      const percentage = mandiriState.totalAttempts > 0 
+        ? Math.round((mandiriState.correctCount / mandiriState.totalAttempts) * 100) 
+        : 0;
+      
+      document.getElementById('mandiri-score').textContent = 
+        `${mandiriState.correctCount} / ${mandiriState.totalAttempts}`;
+      document.getElementById('mandiri-percentage').textContent = `${percentage}%`;
+    }
+    
+    function resetMandiri() {
+      mandiriState.correctCount = 0;
+      mandiriState.totalAttempts = 0;
+      mandiriState.currentQuestion = null;
+      
+      document.getElementById('mandiri-method').value = '';
+      document.getElementById('mandiri-soal-container').classList.add('hidden');
+      updateMandiriScore();
+    }
+    
+    // Print Section
+    function printSection(sectionId) {
+      const studentName = document.getElementById('student-name').value || '_______________';
+      const section = document.getElementById(sectionId);
+      
+      const inputs = section.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
+      const studentAnswers = [];
+      
+      inputs.forEach(input => {
+        if (input.value.trim()) {
+          studentAnswers.push(input.value.trim());
+        } else {
+          studentAnswers.push('(tidak dijawab)');
+        }
+      });
+      
+      const answers = aktivitasAnswers[sectionId];
+      let answerKeyHTML = '';
+      
+      if (answers && answers.length > 0) {
+        answerKeyHTML = `
+          <div class="answer-key-section mt-8 pt-6 border-t-4 border-gray-300 page-break-before">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">📋 KUNCI JAWABAN & KOREKSI</h3>
+            <div class="space-y-3">
+        `;
+        
+        answers.forEach((correctAnswer, index) => {
+          const studentAnswer = studentAnswers[index] || '(tidak dijawab)';
+          const isCorrect = checkAnswerMatch(studentAnswer, correctAnswer);
+          
+          answerKeyHTML += `
+            <div class="bg-gray-50 rounded-lg p-3 border-2 ${isCorrect ? 'border-green-500' : 'border-red-500'}">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <p class="font-semibold text-gray-800">Soal ${index + 1}:</p>
+                  <p class="text-sm mt-1">
+                    <span class="font-medium">📝 Jawaban Siswa:</span> 
+                    <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${studentAnswer}</span>
+                  </p>
+                  <p class="text-sm mt-1">
+                    <span class="font-medium">✅ Kunci Jawaban:</span> 
+                    <span class="text-green-700">${correctAnswer}</span>
+                  </p>
+                </div>
+                <div class="ml-4">
+                  ${isCorrect 
+                    ? '<span class="text-2xl">✅</span>' 
+                    : '<span class="text-2xl">❌</span>'
+                  }
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        const correctCount = studentAnswers.filter((ans, idx) => 
+          checkAnswerMatch(ans, answers[idx])
+        ).length;
+        const totalQuestions = answers.length;
+        const percentage = Math.round((correctCount / totalQuestions) * 100);
+        
+        answerKeyHTML += `
+            </div>
+            <div class="mt-6 bg-gradient-to-r from-sky-100 to-blue-100 rounded-lg p-4">
+              <div class="flex justify-between items-center">
+                <div>
+                  <p class="text-sm text-gray-600">Total Benar</p>
+                  <p class="text-2xl font-bold text-green-600">${correctCount} / ${totalQuestions}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-600">Nilai</p>
+                  <p class="text-2xl font-bold text-blue-600">${percentage}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      const printWindow = window.open('', '_blank');
+      
+      const printContent = `
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+          <meta charset="UTF-8">
+          <title>Print - ${getSectionTitle(sectionId)}</title>
+          <script src="https://cdn.tailwindcss.com"><\/script>
+          <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"><\/script>
+          <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\/script>
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            body { font-family: 'Poppins', sans-serif; padding: 20px; }
+            .math-display {
+              font-size: 1.1em;
+              padding: 12px;
+              background: #f8fafc;
+              border-radius: 8px;
+              border-left: 4px solid #3b82f6;
+              margin: 8px 0;
+            }
+            .page-break-before { page-break-before: always; }
+            @media print {
+              body { padding: 10px; }
+              .page-break-before { page-break-before: always; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="max-w-4xl mx-auto">
+            <div class="mb-6 border-b-2 pb-4">
+              <h1 class="text-2xl font-bold text-gray-800 mb-2">${getSectionTitle(sectionId)}</h1>
+              <p class="font-semibold">Nama: ${studentName}</p>
+              <p class="font-semibold">Kelas: _______________________</p>
+              <p class="font-semibold">Tanggal: ${new Date().toLocaleDateString('id-ID')}</p>
+            </div>
+            
+            <div class="space-y-4">
+              ${section.querySelector('#' + sectionId + '-questions') ? section.querySelector('#' + sectionId + '-questions').innerHTML : section.innerHTML}
+            </div>
+            
+            ${answerKeyHTML}
+          </div>
+          
+          <script>
+            window.onload = function() {
+              if (window.MathJax) {
+                MathJax.typesetPromise().then(() => {
+                  setTimeout(() => {
+                    window.print();
+                    setTimeout(() => window.close(), 100);
+                  }, 500);
+                });
+              } else {
+                setTimeout(() => {
+                  window.print();
+                  setTimeout(() => window.close(), 100);
+                }, 500);
+              }
+            }
+          <\/script>
+        </body>
+        </html>
+      `;
+      
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+    }
+    
+    function checkAnswerMatch(studentAnswer, correctAnswer) {
+      const student = studentAnswer.toLowerCase().trim();
+      const correct = correctAnswer.toLowerCase().trim();
+      
+      if (student === '(tidak dijawab)') return false;
+      
+      return student === correct || student.includes(correct) || correct.includes(student);
+    }
+    
+    function sendToWhatsApp(sectionId) {
+      const studentName = document.getElementById('student-name').value || 'Siswa';
+      const phone = '6285725002770';
+      
+      let message = `*Hasil Pembelajaran SPLDV*\n\n`;
+      message += `👤 Nama: ${studentName}\n`;
+      message += `📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}\n`;
+      message += `📝 Topik: ${getSectionTitle(sectionId)}\n\n`;
+      
+      const section = document.getElementById(sectionId);
+      const inputs = section.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
+      const studentAnswers = [];
+      
+      inputs.forEach(input => {
+        if (input.value.trim()) {
+          studentAnswers.push(input.value.trim());
+        } else {
+          studentAnswers.push('(tidak dijawab)');
+        }
+      });
+      
+      const answers = aktivitasAnswers[sectionId];
+      if (answers && answers.length > 0) {
+        message += `*JAWABAN SISWA & KUNCI JAWABAN:*\n`;
+        message += `${'='.repeat(35)}\n\n`;
+        
+        answers.forEach((correctAnswer, index) => {
+          const studentAnswer = studentAnswers[index] || '(tidak dijawab)';
+          const isCorrect = checkAnswerMatch(studentAnswer, correctAnswer);
+          message += `*Soal ${index + 1}:* ${isCorrect ? '✅' : '❌'}\n`;
+          message += `📝 Jawaban: ${studentAnswer}\n`;
+          message += `✅ Kunci: ${correctAnswer}\n\n`;
+        });
+        
+        const correctCount = studentAnswers.filter((ans, idx) => 
+          checkAnswerMatch(ans, answers[idx])
+        ).length;
+        const totalQuestions = answers.length;
+        const percentage = Math.round((correctCount / totalQuestions) * 100);
+        
+        message += `\n*SKOR:*\n`;
+        message += `Benar: ${correctCount}/${totalQuestions}\n`;
+        message += `Nilai: ${percentage}\n`;
+      }
+      
+      message += `\n_Dikirim dari Pembelajaran SPLDV Interaktif_`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      const waUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
+      
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+    
+    function getSectionTitle(sectionId) {
+      const titles = {
+        'metode-grafik': 'Metode Grafik',
+        'metode-substitusi': 'Metode Substitusi',
+        'metode-eliminasi': 'Metode Eliminasi',
+        'latihan-soal': 'Latihan Soal Kontekstual'
+      };
+      return titles[sectionId] || sectionId;
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      generateGrafikQuestions();
+      generateSubstitusiQuestions();
+      generateEliminasiQuestions();
+      generateLatihanSoal();
+      updateUI();
+      updateMandiriScore();
+      
+      // Initial graph draw
+      drawGraph();
+      
+      // Render MathJax
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bcaa206f22ba3d9',t:'MTc2ODE5OTcxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
