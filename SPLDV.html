@@ -113,6 +113,16 @@
       to { opacity: 1; transform: translateY(0); }
     }
     
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+    
     .method-box {
       transition: all 0.3s ease;
       cursor: pointer;
@@ -237,7 +247,7 @@
         </div>
        </div><!-- Aplikasi Kontekstual -->
        <div class="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4 border-2 border-yellow-200">
-        <h3 class="text-xl font-bold text-amber-800 mb-3">🌟 Aplikasi dalam Kehidupan</h3>
+        <h3 class="text-xl font-bold text-amber-800 mb-3">���� Aplikasi dalam Kehidupan</h3>
         <div class="grid md:grid-cols-2 gap-3">
          <div class="bg-white rounded-lg p-3">
           <p class="font-semibold text-gray-800 mb-1">💰 Masalah Ekonomi</p>
@@ -269,8 +279,6 @@
         <div>
          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📈 Metode Grafik</h2>
          <p class="text-gray-600">Selesaikan SPLDV dengan menggambar grafik!</p>
-        </div>
-        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-grafik')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-grafik')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
         </div>
        </div><!-- Penjelasan Metode -->
        <div class="bg-purple-50 rounded-xl p-4 mb-6 border-2 border-purple-200">
@@ -363,8 +371,6 @@
         <div>
          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">🔄 Metode Substitusi</h2>
          <p class="text-gray-600">Selesaikan SPLDV dengan substitusi!</p>
-        </div>
-        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-substitusi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-substitusi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
         </div>
        </div><!-- Penjelasan Metode -->
        <div class="bg-blue-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
@@ -460,8 +466,6 @@
         <div>
          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">✂️ Metode Eliminasi</h2>
          <p class="text-gray-600">Selesaikan SPLDV dengan eliminasi!</p>
-        </div>
-        <div class="flex gap-2 flex-wrap"><button onclick="printSection('metode-eliminasi')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('metode-eliminasi')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
         </div>
        </div><!-- Penjelasan Metode -->
        <div class="bg-orange-50 rounded-xl p-4 mb-6 border-2 border-orange-200">
@@ -567,7 +571,7 @@
          <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">📝 Latihan Soal Kontekstual</h2>
          <p class="text-gray-600">Aplikasi SPLDV dalam kehidupan sehari-hari!</p>
         </div>
-        <div class="flex gap-2 flex-wrap"><button onclick="printSection('latihan-soal')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨️ Print </button> <button onclick="sendToWhatsApp('latihan-soal')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
+        <div class="flex gap-2 flex-wrap"><button onclick="printSection('latihan-soal')" class="no-print bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 🖨����� Print </button> <button onclick="sendToWhatsApp('latihan-soal')" class="no-print bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"> 📱 Kirim ke WA </button>
         </div>
        </div>
        <div id="latihan-soal-questions" class="space-y-6"></div>
@@ -610,7 +614,7 @@
    </main><!-- Footer -->
    <footer class="no-print bg-white border-t mt-8 py-6">
     <div class="max-w-7xl mx-auto px-4 text-center">
-     <p class="text-gray-600 text-sm">📊 Pembelajaran Sistem Persamaan Linear Interaktif</p>
+     <p class="text-gray-600 text-sm">���� Pembelajaran Sistem Persamaan Linear Interaktif</p>
      <p class="text-gray-400 text-xs mt-1">Metode Grafik, Substitusi &amp; Eliminasi</p>
     </div>
    </footer>
@@ -1537,150 +1541,31 @@
     // Print Section
     function printSection(sectionId) {
       const studentName = document.getElementById('student-name').value || '_______________';
-      const section = document.getElementById(sectionId);
       
-      const inputs = section.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
-      const studentAnswers = [];
-      
-      inputs.forEach(input => {
-        if (input.value.trim()) {
-          studentAnswers.push(input.value.trim());
-        } else {
-          studentAnswers.push('(tidak dijawab)');
+      // Hide all sections except the one to print
+      document.querySelectorAll('.section-content').forEach(s => {
+        if (s.id !== sectionId) {
+          s.style.display = 'none';
         }
       });
       
-      const answers = aktivitasAnswers[sectionId];
-      let answerKeyHTML = '';
+      // Print
+      window.print();
       
-      if (answers && answers.length > 0) {
-        answerKeyHTML = `
-          <div class="answer-key-section mt-8 pt-6 border-t-4 border-gray-300 page-break-before">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">📋 KUNCI JAWABAN & KOREKSI</h3>
-            <div class="space-y-3">
-        `;
-        
-        answers.forEach((correctAnswer, index) => {
-          const studentAnswer = studentAnswers[index] || '(tidak dijawab)';
-          const isCorrect = checkAnswerMatch(studentAnswer, correctAnswer);
-          
-          answerKeyHTML += `
-            <div class="bg-gray-50 rounded-lg p-3 border-2 ${isCorrect ? 'border-green-500' : 'border-red-500'}">
-              <div class="flex items-start justify-between">
-                <div class="flex-1">
-                  <p class="font-semibold text-gray-800">Soal ${index + 1}:</p>
-                  <p class="text-sm mt-1">
-                    <span class="font-medium">📝 Jawaban Siswa:</span> 
-                    <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${studentAnswer}</span>
-                  </p>
-                  <p class="text-sm mt-1">
-                    <span class="font-medium">✅ Kunci Jawaban:</span> 
-                    <span class="text-green-700">${correctAnswer}</span>
-                  </p>
-                </div>
-                <div class="ml-4">
-                  ${isCorrect 
-                    ? '<span class="text-2xl">✅</span>' 
-                    : '<span class="text-2xl">❌</span>'
-                  }
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        
-        const correctCount = studentAnswers.filter((ans, idx) => 
-          checkAnswerMatch(ans, answers[idx])
-        ).length;
-        const totalQuestions = answers.length;
-        const percentage = Math.round((correctCount / totalQuestions) * 100);
-        
-        answerKeyHTML += `
-            </div>
-            <div class="mt-6 bg-gradient-to-r from-sky-100 to-blue-100 rounded-lg p-4">
-              <div class="flex justify-between items-center">
-                <div>
-                  <p class="text-sm text-gray-600">Total Benar</p>
-                  <p class="text-2xl font-bold text-green-600">${correctCount} / ${totalQuestions}</p>
-                </div>
-                <div class="text-right">
-                  <p class="text-sm text-gray-600">Nilai</p>
-                  <p class="text-2xl font-bold text-blue-600">${percentage}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      
-      const printWindow = window.open('', '_blank');
-      
-      const printContent = `
-        <!DOCTYPE html>
-        <html lang="id">
-        <head>
-          <meta charset="UTF-8">
-          <title>Print - ${getSectionTitle(sectionId)}</title>
-          <script src="https://cdn.tailwindcss.com"><\/script>
-          <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"><\/script>
-          <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\/script>
-          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-          <style>
-            body { font-family: 'Poppins', sans-serif; padding: 20px; }
-            .math-display {
-              font-size: 1.1em;
-              padding: 12px;
-              background: #f8fafc;
-              border-radius: 8px;
-              border-left: 4px solid #3b82f6;
-              margin: 8px 0;
-            }
-            .page-break-before { page-break-before: always; }
-            @media print {
-              body { padding: 10px; }
-              .page-break-before { page-break-before: always; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="max-w-4xl mx-auto">
-            <div class="mb-6 border-b-2 pb-4">
-              <h1 class="text-2xl font-bold text-gray-800 mb-2">${getSectionTitle(sectionId)}</h1>
-              <p class="font-semibold">Nama: ${studentName}</p>
-              <p class="font-semibold">Kelas: _______________________</p>
-              <p class="font-semibold">Tanggal: ${new Date().toLocaleDateString('id-ID')}</p>
-            </div>
-            
-            <div class="space-y-4">
-              ${section.querySelector('#' + sectionId + '-questions') ? section.querySelector('#' + sectionId + '-questions').innerHTML : section.innerHTML}
-            </div>
-            
-            ${answerKeyHTML}
-          </div>
-          
-          <script>
-            window.onload = function() {
-              if (window.MathJax) {
-                MathJax.typesetPromise().then(() => {
-                  setTimeout(() => {
-                    window.print();
-                    setTimeout(() => window.close(), 100);
-                  }, 500);
-                });
-              } else {
-                setTimeout(() => {
-                  window.print();
-                  setTimeout(() => window.close(), 100);
-                }, 500);
-              }
-            }
-          <\/script>
-        </body>
-        </html>
-      `;
-      
-      printWindow.document.write(printContent);
-      printWindow.document.close();
+      // Restore display
+      document.querySelectorAll('.section-content').forEach(s => {
+        if (s.classList.contains('hidden')) {
+          s.style.display = 'none';
+        } else {
+          s.style.display = 'block';
+        }
+      });
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
     
     function checkAnswerMatch(studentAnswer, correctAnswer) {
@@ -1702,11 +1587,17 @@
       message += `📝 Topik: ${getSectionTitle(sectionId)}\n\n`;
       
       const section = document.getElementById(sectionId);
+      
+      if (!section) {
+        showNotification('��� Bagian tidak ditemukan!', 'error');
+        return;
+      }
+      
       const inputs = section.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
       const studentAnswers = [];
       
       inputs.forEach(input => {
-        if (input.value.trim()) {
+        if (input.value && input.value.trim()) {
           studentAnswers.push(input.value.trim());
         } else {
           studentAnswers.push('(tidak dijawab)');
@@ -1718,23 +1609,27 @@
         message += `*JAWABAN SISWA & KUNCI JAWABAN:*\n`;
         message += `${'='.repeat(35)}\n\n`;
         
+        let correctCount = 0;
+        
         answers.forEach((correctAnswer, index) => {
           const studentAnswer = studentAnswers[index] || '(tidak dijawab)';
           const isCorrect = checkAnswerMatch(studentAnswer, correctAnswer);
-          message += `*Soal ${index + 1}:* ${isCorrect ? '✅' : '❌'}\n`;
+          
+          if (isCorrect) correctCount++;
+          
+          message += `*Soal ${index + 1}:* ${isCorrect ? '���' : '❌'}\n`;
           message += `📝 Jawaban: ${studentAnswer}\n`;
           message += `✅ Kunci: ${correctAnswer}\n\n`;
         });
         
-        const correctCount = studentAnswers.filter((ans, idx) => 
-          checkAnswerMatch(ans, answers[idx])
-        ).length;
         const totalQuestions = answers.length;
         const percentage = Math.round((correctCount / totalQuestions) * 100);
         
         message += `\n*SKOR:*\n`;
         message += `Benar: ${correctCount}/${totalQuestions}\n`;
         message += `Nilai: ${percentage}\n`;
+      } else {
+        message += `\n_Belum ada kunci jawaban untuk bagian ini._\n`;
       }
       
       message += `\n_Dikirim dari Pembelajaran SPLDV Interaktif_`;
@@ -1742,7 +1637,34 @@
       const encodedMessage = encodeURIComponent(message);
       const waUrl = `https://wa.me/${phone}?text=${encodedMessage}`;
       
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      // Open in new tab
+      const opened = window.open(waUrl, '_blank', 'noopener,noreferrer');
+      
+      if (opened) {
+        showNotification('✓ WhatsApp dibuka! Kirim pesan Anda.', 'success');
+      } else {
+        showNotification('❌ Pop-up diblokir! Izinkan pop-up untuk WhatsApp.', 'error');
+      }
+    }
+    
+    function showNotification(message, type) {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-xl shadow-lg font-semibold text-white ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+      }`;
+      notification.textContent = message;
+      notification.style.animation = 'fadeIn 0.3s ease-in';
+      
+      document.body.appendChild(notification);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
     }
     
     function getSectionTitle(sectionId) {
@@ -1773,5 +1695,5 @@
       }
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bcaa206f22ba3d9',t:'MTc2ODE5OTcxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bcab87a268ca3d9',t:'MTc2ODIwMDYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
